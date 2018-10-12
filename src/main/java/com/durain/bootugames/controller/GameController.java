@@ -8,9 +8,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.durain.bootugames.DTO.CartDTO;
 import com.durain.bootugames.dataobject.GameCategory;
 import com.durain.bootugames.dataobject.GameInfo;
 import com.durain.bootugames.service.GameCategoryService;
@@ -25,7 +28,7 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/game")
-@Api(description="Game Services", tags= {"Game"})
+@Api(description = "Game Services", tags = { "Game" })
 public class GameController {
 
 	@Autowired
@@ -60,5 +63,15 @@ public class GameController {
 			gameVOList.add(gameVO);
 		}
 		return ResultVOUtil.success(gameVOList);
+	}
+
+	@PostMapping("/listFromOrder")
+	public List<GameInfo> listFromOrder(@RequestBody List<String> productIdList) {
+		return gameService.findGamesByIds(productIdList);
+	}
+
+	@PostMapping("/decreaseGameStock")
+	public void decreaseGameStock(@RequestBody List<CartDTO> cardDTOList) {
+		gameService.decreaseGameStock(cardDTOList);
 	}
 }
